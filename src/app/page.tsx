@@ -1,21 +1,24 @@
 'use client';
 
 import { useState, useCallback, lazy, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { AnimatePresence } from 'framer-motion';
 import MonitorFrame from '@/components/ui/MonitorFrame';
 import BootSequence from '@/components/boot/BootSequence';
-import BatSwarm from '@/components/effects/BatSwarm';
-import BatScatter from '@/components/effects/BatScatter';
 import PanelTransition from '@/components/effects/PanelTransition';
 import MainMenu from '@/components/menu/MainMenu';
 import BackButton from '@/components/ui/BackButton';
 import MuteToggle from '@/components/ui/MuteToggle';
 import HUDOverlay from '@/components/ui/HUDOverlay';
-import ScarecrowEffect from '@/components/effects/ScarecrowEffect';
-import GothamRain from '@/components/effects/GothamRain';
-import CursorGlow from '@/components/effects/CursorGlow';
 import { useAudio } from '@/hooks/useAudio';
 import type { SectionId } from '@/lib/constants';
+
+// Canvas/window-dependent components — client-only to prevent hydration mismatch
+const BatSwarm = dynamic(() => import('@/components/effects/BatSwarm'), { ssr: false });
+const BatScatter = dynamic(() => import('@/components/effects/BatScatter'), { ssr: false });
+const GothamRain = dynamic(() => import('@/components/effects/GothamRain'), { ssr: false });
+const CursorGlow = dynamic(() => import('@/components/effects/CursorGlow'), { ssr: false });
+const ScarecrowEffect = dynamic(() => import('@/components/effects/ScarecrowEffect'), { ssr: false });
 
 // Lazy load sections
 const OperativeProfile = lazy(() => import('@/components/sections/OperativeProfile'));
