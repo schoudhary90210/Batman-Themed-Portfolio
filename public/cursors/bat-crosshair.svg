@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g fill="#dc2626" opacity="0.9">
+    <!-- Bat body -->
+    <path d="M16 10 C14 10, 12 8, 8 6 C10 10, 10 12, 10 14 C8 13, 6 12, 4 13 C7 15, 9 16, 10 17 C9 18, 8 20, 8 22 C10 20, 12 19, 14 18 C14 20, 15 22, 16 24 C17 22, 18 20, 18 18 C20 19, 22 20, 24 22 C24 20, 23 18, 22 17 C23 16, 25 15, 28 13 C26 12, 24 13, 22 14 C22 12, 22 10, 24 6 C20 8, 18 10, 16 10Z"/>
+    <!-- Crosshair lines -->
+    <rect x="15.5" y="0" width="1" height="8" opacity="0.6"/>
+    <rect x="15.5" y="24" width="1" height="8" opacity="0.6"/>
+    <rect x="0" y="15.5" width="8" height="1" opacity="0.6"/>
+    <rect x="24" y="15.5" width="8" height="1" opacity="0.6"/>
+  </g>
+</svg>
