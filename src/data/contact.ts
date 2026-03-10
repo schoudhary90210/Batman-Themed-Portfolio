@@ -15,7 +15,7 @@ export const contactLinks: ContactLink[] = [
   {
     id: 'linkedin',
     label: 'LinkedIn',
-    href: 'https://linkedin.com/in/siddhantchoudhary–',
+    href: 'https://linkedin.com/in/siddhantchoudhary--',
     icon: 'linkedin',
   },
   {
