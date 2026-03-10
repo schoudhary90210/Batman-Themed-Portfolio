@@ -74,7 +74,6 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
       ref={cardRef}
       className="relative h-72 md:h-80"
       style={{ perspective: '800px' }}
-      onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -97,8 +96,9 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
       >
         {/* ══════════ Front face ══════════ */}
         <div
-          className="absolute inset-0 border border-border bg-[#080808] p-5 md:p-6 flex flex-col justify-between wireframe-pulse hover:border-accent/40 transition-colors duration-300 group"
-          style={{ backfaceVisibility: 'hidden' }}
+          className="absolute inset-0 border border-border bg-[#080808] p-5 md:p-6 flex flex-col justify-between wireframe-pulse hover:border-accent/40 transition-colors duration-300 group cursor-pointer"
+          style={{ backfaceVisibility: 'hidden', pointerEvents: isFlipped ? 'none' : 'auto' }}
+          onClick={handleClick}
         >
           {/* Holographic shimmer overlay */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 holographic pointer-events-none" />
@@ -201,7 +201,7 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
                   e.stopPropagation();
                   setIsFlipped(false);
                 }}
-                className="text-text-secondary hover:text-accent transition-colors"
+                className="relative z-10 text-text-secondary hover:text-accent transition-colors"
               >
                 <X size={16} />
               </button>
@@ -239,7 +239,7 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-1.5 font-mono text-xs text-text-secondary hover:text-accent transition-colors"
+                  className="relative z-10 flex items-center gap-1.5 font-mono text-xs text-text-secondary hover:text-accent transition-colors"
                 >
                   <Github size={14} />
                   Source
@@ -252,7 +252,7 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 font-mono text-xs text-text-secondary hover:text-accent transition-colors"
+                    className="relative z-10 flex items-center gap-1.5 font-mono text-xs text-text-secondary hover:text-accent transition-colors"
                   >
                     <ExternalLink size={14} />
                     Demo
