@@ -43,7 +43,7 @@ export default function CaseHistory() {
       <motion.div variants={sectionItemVariants} className="mt-14">
         <MagneticWrap>
           <a
-            href="/resume/Siddhant_Choudhary.pdf"
+            href="/resume/Siddhant_Choudhary_Resume.pdf"
             download
             className="inline-block px-8 py-3 border-2 border-accent font-heading text-lg uppercase tracking-[0.15em] text-accent hover:bg-accent/10 transition-all duration-300 red-glow hover:red-glow-intense"
           >
