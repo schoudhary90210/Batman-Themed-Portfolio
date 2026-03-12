@@ -19,7 +19,7 @@ const PROCESSING_INDICES = new Set([0, 2]);
 
 const CHANNELS = [
   { label: 'CHANNEL 01', name: 'GITHUB', href: 'https://github.com/schoudhary90210', Icon: Github, external: true },
-  { label: 'CHANNEL 02', name: 'LINKEDIN', href: 'https://linkedin.com/in/siddhantchoudhary\u2013', Icon: Linkedin, external: true },
+  { label: 'CHANNEL 02', name: 'LINKEDIN', href: 'https://linkedin.com/in/siddhantchoudhary--', Icon: Linkedin, external: true },
   { label: 'CHANNEL 03', name: 'EMAIL', href: 'mailto:csiddhant12@gmail.com', Icon: Mail, external: false },
 ];
 
