@@ -52,10 +52,14 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
     setTilt({ rotateX: 0, rotateY: 0, x: 0.5, y: 0.5 });
   }, []);
 
-  const handleClick = useCallback(() => {
-    setIsFlipped(prev => !prev);
-    // Reset tilt on flip
+  const handleFlipToBack = useCallback(() => {
+    setIsFlipped(true);
     setTilt({ rotateX: 0, rotateY: 0, x: 0.5, y: 0.5 });
+  }, []);
+
+  const handleFlipToFront = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFlipped(false);
   }, []);
 
   // Parallax offsets for inner content (opposite direction of tilt)
@@ -69,6 +73,125 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
     ? `${-tilt.rotateY * 0.5}px ${tilt.rotateX * 0.5}px 20px rgba(220, 38, 38, 0.3)`
     : undefined;
 
+  // ══════════ MOBILE: fade transition (no 3D) ══════════
+  if (isMobile) {
+    return (
+      <div className="relative h-72 md:h-80">
+        {/* Front face */}
+        <div
+          className="absolute inset-0 border border-border bg-[#080808] p-5 flex flex-col justify-between wireframe-pulse cursor-pointer"
+          style={{
+            opacity: isFlipped ? 0 : 1,
+            pointerEvents: isFlipped ? 'none' : 'auto',
+            transition: 'opacity 0.3s ease-out',
+          }}
+          onClick={handleFlipToBack}
+        >
+          {/* Corner decorations */}
+          <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-accent/30" />
+          <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-accent/30" />
+          <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-accent/30" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-accent/30" />
+
+          <div>
+            <h3 className="font-heading text-xl font-bold uppercase tracking-wider text-accent">
+              {project.name}
+            </h3>
+            <p className="font-mono text-xs text-text-secondary mt-2">
+              {project.tagline}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {project.techIcons.map((tech) => (
+              <span
+                key={tech}
+                className="font-mono text-[10px] px-2 py-1 border border-border/50 text-text-secondary"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Back face */}
+        <div
+          className="absolute inset-0 border border-accent/30 bg-[#080808] p-5 flex flex-col overflow-y-auto"
+          style={{
+            opacity: isFlipped ? 1 : 0,
+            pointerEvents: isFlipped ? 'auto' : 'none',
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {/* Scan line overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-30"
+            style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)',
+            }}
+          />
+
+          <div className="relative z-10 flex flex-col h-full">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="font-heading text-lg font-bold uppercase tracking-wider text-accent">
+                {project.name}
+              </h3>
+              <button
+                onClick={handleFlipToFront}
+                className="relative z-10 text-text-secondary hover:text-accent transition-colors p-1"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <p className="font-mono text-xs text-text-secondary leading-relaxed flex-1">
+              {project.description}
+            </p>
+
+            {project.metrics && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {project.metrics.map((metric) => (
+                  <span
+                    key={metric}
+                    className="font-mono text-[10px] px-2 py-1 bg-accent/10 border border-accent/20 text-accent"
+                  >
+                    {/Top \d|O\(/.test(metric) ? metric : renderAnimatedNumbers(metric)}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-4 flex gap-3">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="relative z-10 flex items-center gap-1.5 font-mono text-xs text-text-secondary hover:text-accent transition-colors"
+              >
+                <Github size={14} />
+                Source
+              </a>
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative z-10 flex items-center gap-1.5 font-mono text-xs text-text-secondary hover:text-accent transition-colors"
+                >
+                  <ExternalLink size={14} />
+                  Demo
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ══════════ DESKTOP: 3D flip with tilt ══════════
   return (
     <div
       ref={cardRef}
@@ -82,6 +205,7 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
         className="relative w-full h-full"
         style={{
           transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d',
           willChange: isHovering ? 'transform' : undefined,
           transform: tiltEnabled && isHovering
             ? `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`
@@ -97,8 +221,12 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
         {/* ══════════ Front face ══════════ */}
         <div
           className="absolute inset-0 border border-border bg-[#080808] p-5 md:p-6 flex flex-col justify-between wireframe-pulse hover:border-accent/40 transition-colors duration-300 group cursor-pointer"
-          style={{ backfaceVisibility: 'hidden', pointerEvents: isFlipped ? 'none' : 'auto' }}
-          onClick={handleClick}
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            pointerEvents: isFlipped ? 'none' : 'auto',
+          }}
+          onClick={handleFlipToBack}
         >
           {/* Holographic shimmer overlay */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 holographic pointer-events-none" />
@@ -162,13 +290,17 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
         {/* ══════════ Back face ══════════ */}
         <div
           className="absolute inset-0 border border-accent/30 bg-[#080808] p-5 md:p-6 flex flex-col overflow-y-auto"
-          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+          }}
         >
           {/* Scan line overlay on back */}
           <div
             className="absolute inset-0 pointer-events-none opacity-30"
             style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)`,
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)',
             }}
           />
 
@@ -197,10 +329,7 @@ export default function ArsenalCard({ project }: ArsenalCardProps) {
                 {project.name}
               </h3>
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsFlipped(false);
-                }}
+                onClick={handleFlipToFront}
                 className="relative z-10 text-text-secondary hover:text-accent transition-colors"
               >
                 <X size={16} />
